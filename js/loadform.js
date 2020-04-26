@@ -5,12 +5,12 @@ function onSelectStore(ele){
 
     switch (ele.value) {
         case "ALDI":
-            label.text("ALDI Location:");
+            label.text("Location:");
             select.find('option').remove();
             select.append($("<option></option>")
                          .attr("value","")
                          .text("Choose Store Location"));
-            selectValues = ['Bunny Trail', 'Lien Road', 'Mckee Road', 'Watts Road', 'Highway 51',];
+            selectValues = ['Fitchburg', 'Madison - Lien Road', 'Madison - Watts Road', 'Stoughton', 'Sun Prairie',];
             $.each(selectValues, function(index,value){
                 select.append($("<option></option>")
                               .attr("value",value)
@@ -19,7 +19,7 @@ function onSelectStore(ele){
             break;
             
         case "Costco":
-            label.text("Costco Location:");
+            label.text("Location:");
             select.find('option').remove();
             select.append($("<option></option>")
                           .attr("value","")
@@ -32,7 +32,111 @@ function onSelectStore(ele){
             });
             break;
         
+        case "Festival Foods":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['Madison', 'Verona'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break;
             
+        case "Pick 'n Save":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['DeForest', 'Fitchburg', 'Maple Grove', 'Madison - Park', 'Madison - Junction', 'Madison - Shopko Dr', 'McFarland', 'Middleton', 'Monona', 'Shorewood Hills', 'Stoughton', 'Sun Prairie - E Main', 'Sun Prairie - Ironwood'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break;    
+        
+        case "Piggly Wiggly Midwest":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['Cambridge', 'Cottage Grove', 'Cross Plains', 'Waunakee'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break;
+            
+        case "Target":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['Fitchburg', 'Madison - Lien Road', 'Madison - Hilldale Way', 'Madison - Junction Road', 'Sun Prairie'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break;
+            
+        case "Walmart":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['Madison - Watts Road', 'Madison - Nakoose Trail', 'Monona', 'Stoughton', 'Sun Prairie'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break;
+            
+        case "Willy Street Co-op":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['East', 'North', 'West'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break; 
+            
+        case "Woodman's Market":
+            label.text("Location:");
+            select.find('option').remove();
+            select.find('option').remove();
+            select.append($("<option></option>")
+                          .attr("value","")
+                          .text("Choose Store Location"));
+            selectValues = ['Madison - Milwaukee Street', 'Madison - S Gammon Road', 'Sun Prairie'];
+            $.each(selectValues, function(index,value){
+                select.append($("<option></option>")
+                             .attr("value",value)
+                             .text(value));
+            });
+            break;
+        
         case "Brennan's Market":
         case "Hy-Vee":
         case "Metro Market":

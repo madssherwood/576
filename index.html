@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
-		<title>Dane County Grocery Stores</title>
+		<title>Dane County Grocery Stores</title> <!---is this title okay?--->
 
         <link rel="stylesheet" href="css/style.css"/>
 
@@ -13,15 +13,14 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-				<!-- Google Map js libraries-->
-				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk2dIewJcYtxvNDLVk1Jmj1kgb5zgleRI&libraries=places,visualization">
-				</script>
+        <!-- Google Map js libraries-->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk2dIewJcYtxvNDLVk1Jmj1kgb5zgleRI&libraries=places,visualization"></script>
 
     </head>
 
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
-            <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a>
+            <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a> <!---is this title okay??--->
         </nav>
 
         <div class="container-fluid">
@@ -38,28 +37,28 @@
         <div class="tab-pane active" id="query">
               <form id = "query_form">
                 <div><label>Store Name:</label>
-                    <select onchange="onSelectReportType(this)" name="store_label">
-                        <option value="">Choose Store Name</option>
+                    <select onchange="onSelectStore(this)" name="store_label">
+                        <option value="">All</option>
                         <option value="ALDI">ALDI</option>
                         <option value="Brennan's Market">Brennan's Market</option>
                         <option value="Costco">Costco</option>
                         <option value="Festival Foods">Festival Foods</option>
                         <option value="Hy-Vee">Hy-Vee</option>
                         <option value="Metro Market">Metro Market</option>
-                        <option value="National Co-op Grocers">National Co-op Grocers</option>
                         <option value="Pick 'n Save">Pick 'n Save</option>
                         <option value="Piggly Wiggly Midwest">Piggly Wiggly Midwest</option>
                         <option value="Target">Target</option>
                         <option value="Trader Joe's">Trader Joe's</option>
-                        <option value="Whole Foods Market">Whole Foods Market</option>
                         <option value="Walmart">Walmart</option>
+                        <option value="Whole Foods Market">Whole Foods Market</option>
+                        <option value="Willy Street Co-op">Willy Street Co-op</option>
                         <option value="Woodman's Market">Woodman's Market</option>
                     </select>
                   </div>
                 <br>
                 <div><label>Store Type:</label>
-                    <select onchange="onSelectReportType(this)" name="store_type">
-                        <option value="">Choose Store Type</option>
+                    <select onchange="onSelectReportType(this)" name="store_type"> <!---change this! add field in data--->
+                        <option value="">All</option>
                         <option value="grocery">Grocery Only</option>
                         <option value="bigbox">Big Box</option>
                     </select>
@@ -103,7 +102,7 @@
         <div class="tab-pane" id="create">
             <form id = "create_form">
                 <div><label>Store Name:</label>
-                    <select onchange="onSelectReportType(this)" name="store_label">
+                    <select onchange="onSelectStore(this)" name="store_label">
                         <option value="">Choose Store Name</option>
                         <option value="ALDI">ALDI</option>
                         <option value="Brennan's Market">Brennan's Market</option>
@@ -111,22 +110,19 @@
                         <option value="Festival Foods">Festival Foods</option>
                         <option value="Hy-Vee">Hy-Vee</option>
                         <option value="Metro Market">Metro Market</option>
-                        <option value="National Co-op Grocers">National Co-op Grocers</option>
                         <option value="Pick 'n Save">Pick 'n Save</option>
                         <option value="Piggly Wiggly Midwest">Piggly Wiggly Midwest</option>
                         <option value="Target">Target</option>
                         <option value="Trader Joe's">Trader Joe's</option>
-                        <option value="Whole Foods Market">Whole Foods Market</option>
                         <option value="Walmart">Walmart</option>
+                        <option value="Whole Foods Market">Whole Foods Market</option>
+                        <option value="Willy Street Co-op">Willy Street Co-op</option>
                         <option value="Woodman's Market">Woodman's Market</option>
                     </select>
                 </div>
-                <div><label>edit loadform.js to make a second dropdown for stores with multiple locations?</label></div>
-
                 <div class="store_info_div" style="visibility: hidden"><label class="store_info"></label>
                     <select class="store_info_select" name="store_info"></select>
                 </div>
-
                 <div>
                     <label>Dairy Product Availability</label>
                     <br>
