@@ -6,31 +6,35 @@
 		<title>Dane County Grocery Stores</title>
 
         <link rel="stylesheet" href="css/style.css"/>
-        
+
         <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+				<!-- Google Map js libraries-->
+				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk2dIewJcYtxvNDLVk1Jmj1kgb5zgleRI&libraries=places,visualization">
+				</script>
+
     </head>
-    
+
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a>
         </nav>
-        
+
         <div class="container-fluid">
         <div class="row">
         <div class="sidebar col-xs-3">
-            
+
         <ul class="nav nav-tabs">
           <li class="active"><a href="#query" data-toggle="tab">Search</a></li>
           <li><a href="#create" data-toggle="tab">Report</a></li>
         </ul>
-            
+
         <div class="tab-content ">
-            
+
         <div class="tab-pane active" id="query">
               <form id = "query_form">
                 <div><label>Store Name:</label>
@@ -61,7 +65,7 @@
                     </select>
                   </div>
                 <br>
-                  
+
                 <script language="JavaScript">
                     function toggle(source) {
                         checkboxes = document.getElementsByName('check');
@@ -82,7 +86,7 @@
                     <input type="checkbox" name="check" value="cleaning_products"> Cleaning Products<br/>
                   </div>
                 <br>
-                                
+
                 <button type="submit" class="btn btn-default">
                   Submit
                 </button>
@@ -90,12 +94,12 @@
                 <br>
                 <div>
                     <label>Legend Here
-                    
+
                     -- markers on map: store name, time, address, phone number, get directions?? and status </label>
                   </div>
               </form>
             </div>
-        
+
         <div class="tab-pane" id="create">
             <form id = "create_form">
                 <div><label>Store Name:</label>
@@ -118,14 +122,14 @@
                     </select>
                 </div>
                 <div><label>edit loadform.js to make a second dropdown for stores with multiple locations?</label></div>
-                
+
                 <div class="store_info_div" style="visibility: hidden"><label class="store_info"></label>
                     <select class="store_info_select" name="store_info"></select>
                 </div>
-    
+
                 <div>
                     <label>Dairy Product Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="dairy_products" value="high">&nbspHigh</label>
                     <label><input type="radio" name="dairy_products" value="low">&nbspLow</label>
                     <label><input type="radio" name="dairy_products" value="none">&nbspNone</label>
@@ -133,7 +137,7 @@
                 <br>
                 <div>
                     <label>Bread & Grain Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="bread_grain" value="high">&nbspHigh</label>
                     <label><input type="radio" name="bread_grain" value="low">&nbspLow</label>
                     <label><input type="radio" name="bread_grain" value="none">&nbspNone</label>
@@ -141,7 +145,7 @@
                 <br>
                 <div>
                     <label>Fresh Produce Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="produce" value="high">&nbspHigh</label>
                     <label><input type="radio" name="produce" value="low">&nbspLow</label>
                     <label><input type="radio" name="produce" value="none">&nbspNone</label>
@@ -149,7 +153,7 @@
                 <br>
                 <div>
                     <label>Meat & Seafood Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="meat_seafood" value="high">&nbspHigh</label>
                     <label><input type="radio" name="meat_seafood" value="low">&nbspLow</label>
                     <label><input type="radio" name="meat_seafood" value="none">&nbspNone</label>
@@ -157,7 +161,7 @@
                 <br>
                 <div>
                     <label>Bottled Water Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="water" value="high">&nbspHigh</label>
                     <label><input type="radio" name="water" value="low">&nbspLow</label>
                     <label><input type="radio" name="water" value="none">&nbspNone</label>
@@ -165,7 +169,7 @@
                 <br>
                 <div>
                     <label>Paper Product Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="paper_products" value="high">&nbspHigh</label>
                     <label><input type="radio" name="paper_products" value="low">&nbspLow</label>
                     <label><input type="radio" name="paper_products" value="none">&nbspNone</label>
@@ -173,13 +177,13 @@
                 <br>
                 <div>
                     <label>Cleaning Product Availability</label>
-                    <br>                    
+                    <br>
                     <label><input type="radio" name="cleaning_products" value="high">&nbspHigh</label>
                     <label><input type="radio" name="cleaning products" value="low">&nbspLow</label>
                     <label><input type="radio" name="cleaning_products" value="none">&nbspNone</label>
                   </div>
                 <br>
-              
+
                 <button type="submit" class="btn btn-default">
                   Submit
                 </button>
@@ -192,9 +196,9 @@
 
         </div>
         </div>
-    
+
         <script src="js/loadform.js"></script>
         <script src="js/loadmap.js"></script>
-    
+
 	</body>
 </html>
