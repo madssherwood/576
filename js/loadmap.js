@@ -25,14 +25,16 @@ function showAllReports() {
 
 function mapInitialization(reports) {
     var mapOptions = {
-        mapTypeId : google.maps.MapTypeId.ROADMAP, // Set the type of Map
+
+        zoom: 10,
+        center: {lat: 43.0731, lng: -89.4012},
+        mapTypeId : 'roadmap' // Set the type of Map
     };
 
     // Render the map within the empty div
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-    var bounds = new google.maps.LatLngBounds ();
-
+    //
     // $.each(reports, function(i, e) {
     //     var long = Number(e['longitude']);
     //     var lat = Number(e['latitude']);
@@ -96,7 +98,7 @@ function mapInitialization(reports) {
     //
     // });
 
-    map.fitBounds (bounds);
+    //map.fitBounds (bounds);
 
 }
 
