@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>Dane County Grocery Stores</title>
+
+        <link rel="stylesheet" href="css/style.css"/>
+        
+        <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+    
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a>
+        </nav>
+        
+        <div class="container-fluid">
+        <div class="row">
+        <div class="sidebar col-xs-3">
+            
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#query" data-toggle="tab">Search</a></li>
+          <li><a href="#create" data-toggle="tab">Report</a></li>
+        </ul>
+            
+        <div class="tab-content ">
+            
+        <div class="tab-pane active" id="query">
+              <form id = "query_form">
+                <div><label>Store Name:</label>
+                    <select onchange="onSelectReportType(this)" name="store_label">
+                        <option value="">Choose Store Name</option>
+                        <option value="ALDI">ALDI</option>
+                        <option value="Brennan's Market">Brennan's Market</option>
+                        <option value="Costco">Costco</option>
+                        <option value="Festival Foods">Festival Foods</option>
+                        <option value="Hy-Vee">Hy-Vee</option>
+                        <option value="Metro Market">Metro Market</option>
+                        <option value="National Co-op Grocers">National Co-op Grocers</option>
+                        <option value="Pick 'n Save">Pick 'n Save</option>
+                        <option value="Piggly Wiggly Midwest">Piggly Wiggly Midwest</option>
+                        <option value="Target">Target</option>
+                        <option value="Trader Joe's">Trader Joe's</option>
+                        <option value="Whole Foods Market">Whole Foods Market</option>
+                        <option value="Walmart">Walmart</option>
+                        <option value="Woodman's Market">Woodman's Market</option>
+                    </select>
+                  </div>
+                <br>
+                <div><label>Store Type:</label>
+                    <select onchange="onSelectReportType(this)" name="store_type">
+                        <option value="">Choose Store Type</option>
+                        <option value="grocery">Grocery Only</option>
+                        <option value="bigbox">Big Box</option>
+                    </select>
+                  </div>
+                <br>
+                  
+                <script language="JavaScript">
+                    function toggle(source) {
+                        checkboxes = document.getElementsByName('check');
+                        for(var i=0, n=checkboxes.length; i<n; i++)
+                            checkboxes[i].checked = source.checked;
+                    }
+                  </script>
+                <div>
+                  <label>What are you shopping for?</label>
+                    <br>
+                    <input type="checkbox" onClick="toggle(this)" /> Select All<br/>
+                    <input type="checkbox" name="check" value="dairy_products"> Dairy Products<br/>
+                    <input type="checkbox" name="check" value="bread_grain"> Breads & Grains<br/>
+                    <input type="checkbox" name="check" value="produce"> Fresh Produce<br/>
+                    <input type="checkbox" name="check" value="meat_seafood"> Meat & Seafood<br/>
+                    <input type="checkbox" name="check" value="water"> Bottled Water<br/>
+                    <input type="checkbox" name="check" value="paper_products"> Paper Products<br/>
+                    <input type="checkbox" name="check" value="cleaning_products"> Cleaning Products<br/>
+                  </div>
+                <br>
+                                
+                <button type="submit" class="btn btn-default">
+                  Submit
+                </button>
+                <br>
+                <br>
+                <div>
+                    <label>Legend Here
+                    
+                    -- markers on map: store name, time, address, phone number, get directions?? and status </label>
+                  </div>
+              </form>
+            </div>
+        
+        <div class="tab-pane" id="create">
+            <form id = "create_form">
+                <div><label>Store Name:</label>
+                    <select onchange="onSelectReportType(this)" name="store_label">
+                        <option value="">Choose Store Name</option>
+                        <option value="ALDI">ALDI</option>
+                        <option value="Brennan's Market">Brennan's Market</option>
+                        <option value="Costco">Costco</option>
+                        <option value="Festival Foods">Festival Foods</option>
+                        <option value="Hy-Vee">Hy-Vee</option>
+                        <option value="Metro Market">Metro Market</option>
+                        <option value="National Co-op Grocers">National Co-op Grocers</option>
+                        <option value="Pick 'n Save">Pick 'n Save</option>
+                        <option value="Piggly Wiggly Midwest">Piggly Wiggly Midwest</option>
+                        <option value="Target">Target</option>
+                        <option value="Trader Joe's">Trader Joe's</option>
+                        <option value="Whole Foods Market">Whole Foods Market</option>
+                        <option value="Walmart">Walmart</option>
+                        <option value="Woodman's Market">Woodman's Market</option>
+                    </select>
+                </div>
+                <div><label>edit loadform.js to make a second dropdown for stores with multiple locations?</label></div>
+                
+                <div class="store_info_div" style="visibility: hidden"><label class="store_info"></label>
+                    <select class="store_info_select" name="store_info"></select>
+                </div>
+    
+                <div>
+                    <label>Dairy Product Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="dairy_products" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="dairy_products" value="low">&nbspLow</label>
+                    <label><input type="radio" name="dairy_products" value="none">&nbspNone</label>
+                  </div>
+                <br>
+                <div>
+                    <label>Bread & Grain Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="bread_grain" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="bread_grain" value="low">&nbspLow</label>
+                    <label><input type="radio" name="bread_grain" value="none">&nbspNone</label>
+                  </div>
+                <br>
+                <div>
+                    <label>Fresh Produce Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="produce" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="produce" value="low">&nbspLow</label>
+                    <label><input type="radio" name="produce" value="none">&nbspNone</label>
+                  </div>
+                <br>
+                <div>
+                    <label>Meat & Seafood Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="meat_seafood" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="meat_seafood" value="low">&nbspLow</label>
+                    <label><input type="radio" name="meat_seafood" value="none">&nbspNone</label>
+                  </div>
+                <br>
+                <div>
+                    <label>Bottled Water Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="water" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="water" value="low">&nbspLow</label>
+                    <label><input type="radio" name="water" value="none">&nbspNone</label>
+                  </div>
+                <br>
+                <div>
+                    <label>Paper Product Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="paper_products" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="paper_products" value="low">&nbspLow</label>
+                    <label><input type="radio" name="paper_products" value="none">&nbspNone</label>
+                  </div>
+                <br>
+                <div>
+                    <label>Cleaning Product Availability</label>
+                    <br>                    
+                    <label><input type="radio" name="cleaning_products" value="high">&nbspHigh</label>
+                    <label><input type="radio" name="cleaning products" value="low">&nbspLow</label>
+                    <label><input type="radio" name="cleaning_products" value="none">&nbspNone</label>
+                  </div>
+                <br>
+              
+                <button type="submit" class="btn btn-default">
+                  Submit
+                </button>
+            </form>
+        </div>
+        </div>
+        </div>
+
+        <div id="map-canvas" class="col-xs-9"></div>
+
+        </div>
+        </div>
+    
+        <script src="js/loadform.js"></script>
+        <script src="js/loadmap.js"></script>
+    
+	</body>
+</html>
