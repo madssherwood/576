@@ -67,22 +67,23 @@
 
                 <script language="JavaScript">
                     function toggle(source) {
-                        checkboxes = document.getElementsByName('check');
-                        for(var i=0, n=checkboxes.length; i<n; i++)
-                            checkboxes[i].checked = source.checked;
+                        var checkboxes = document.getElementsByName('check');
+                        checkboxes.forEach((item) => {
+                            if (item !== source) item.checked = false
+                        })
                     }
-                  </script>
+                  </script>                
+                    
                 <div>
                   <label>What are you shopping for?</label>
                     <br>
-                    <input type="checkbox" onClick="toggle(this)" /> Select All<br/>
-                    <input type="checkbox" name="check" value="dairy_products"> Dairy Products<br/>
-                    <input type="checkbox" name="check" value="bread_grain"> Breads & Grains<br/>
-                    <input type="checkbox" name="check" value="produce"> Fresh Produce<br/>
-                    <input type="checkbox" name="check" value="meat_seafood"> Meat & Seafood<br/>
-                    <input type="checkbox" name="check" value="water"> Bottled Water<br/>
-                    <input type="checkbox" name="check" value="paper_products"> Paper Products<br/>
-                    <input type="checkbox" name="check" value="cleaning_products"> Cleaning Products<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="dairy_products"> Dairy Products<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="bread_grain"> Breads & Grains<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="produce"> Fresh Produce<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="meat_seafood"> Meat & Seafood<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="water"> Bottled Water<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="paper_products"> Paper Products<br/>
+                    <input type="checkbox" name="check" onClick="toggle(this)" value="cleaning_products"> Cleaning Products<br/>
                   </div>
                 <br>
 
