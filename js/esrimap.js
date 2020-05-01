@@ -43,32 +43,26 @@ require([
 
     // Symbol for High Availability
     const highSym = {
-        type: "simple-marker", // autocasts as new SimpleLineSymbol()
-        color: "#30ffea",
-        outline: {  // autocasts as new SimpleLineSymbol()
-            width: 1,
-            color: "black"
-        }
+        type: "picture-marker", // autocasts as new SimpleLineSymbol()
+        url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/3c106fa7b91645c683d8e85d8dd97ba6/data",
+        width: "32px",
+        height: "32px"
     };
 
     // Symbol for Low Availability
     const lowSym = {
-        type: "simple-marker", // autocasts as new SimpleLineSymbol()
-        color: "#ff6207",
-        outline: {  // autocasts as new SimpleLineSymbol()
-            width: 1,
-            color: "black"
-        }
+        type: "picture-marker", // autocasts as new SimpleLineSymbol()
+        url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/8b2ed25bae6d4d61b86bc94128b1823d/data",
+        width: "32px",
+        height: "32px"
     };
 
-    // Symbol for No Availability
+    // Symbol for Other
     const noSym = {
-        type: "simple-marker", // autocasts as new SimpleLineSymbol()
-        color: "#ef37ac",
-        outline: {  // autocasts as new SimpleLineSymbol()
-            width: 1,
-            color: "black"
-        }
+        type: "picture-marker", // autocasts as new SimpleLineSymbol()
+        url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/6ecd168ed6794bac9a133eb27d4f7cd8/data",
+        width: "32px",
+        height: "32px"
     };
 
     // Symbol for Other
