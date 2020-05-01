@@ -155,33 +155,33 @@ require([
     });
     map.add(featureLayer);
 
-    var sqlExpressions = ["dairy = 'high'", "dairy = 'low'", "dairy = 'no'", "meat", "water", "paper", "cleaning"];
+    // var sqlExpressions = ["dairy = 'high'", "dairy = 'low'", "dairy = 'no'", "meat", "water", "paper", "cleaning"];
 
-    var selectFilter = document.createElement("select");
-    selectFilter.setAttribute("class", "esri-widget esri-select");
-    selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+    // var selectFilter = document.createElement("select");
+    // selectFilter.setAttribute("class", "esri-widget esri-select");
+    // selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
 
-    sqlExpressions.forEach(function (sql) {
-        var option = document.createElement("option");
-        option.value = sql;
-        option.innerHTML = sql;
-        selectFilter.appendChild(option);
-    });
+    // sqlExpressions.forEach(function (sql) {
+    //     var option = document.createElement("option");
+    //     option.value = sql;
+    //     option.innerHTML = sql;
+    //     selectFilter.appendChild(option);
+    // });
 
-    view.ui.add(selectFilter, "top-left");
+    // view.ui.add(selectFilter, "top-left");
 
-    function setFeatureLayerViewFilter(expression) {
-        view.whenLayerView(featureLayer).then(function (featureLayerView) {
-            featureLayerView.filter = {
-                where: expression
-            };
-        });
-    }
+    // function setFeatureLayerViewFilter(expression) {
+    //     view.whenLayerView(featureLayer).then(function (featureLayerView) {
+    //         featureLayerView.filter = {
+    //             where: expression
+    //         };
+    //     });
+    // }
 
-    selectFilter.addEventListener('change', function (event) {
-        // setFeatureLayerFilter(event.target.value);
-        setFeatureLayerViewFilter(event.target.value);
-    });
+    // selectFilter.addEventListener('change', function (event) {
+    //     // setFeatureLayerFilter(event.target.value);
+    //     setFeatureLayerViewFilter(event.target.value);
+    // });
 
     var directionsWidget = new Directions({
         view: view,
