@@ -44,6 +44,7 @@
             "esri/widgets/Directions"
         ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate, Directions) {
 
+            // Set up map for div
             var map = new Map({
                 basemap: "streets-navigation-vector",
 
@@ -56,6 +57,7 @@
                 zoom: 11
             });
 
+            // Set up the locate widget and call to view
             var locateBtn = new Locate({
                 view: view
             });
@@ -65,7 +67,7 @@
                 position: "top-left"
             });
 
-
+            // Believe this could be commented out and the map will still work
             var renderer = {
                 type: "simple",  // autocasts as new SimpleRenderer()
                 symbol: {
@@ -80,7 +82,7 @@
 
             // Symbol for High Availability
             const highSym = {
-                type: "picture-marker", // autocasts as new SimpleLineSymbol()
+                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
                 url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/3c106fa7b91645c683d8e85d8dd97ba6/data",
                 width: "32px",
                 height: "32px"
@@ -89,7 +91,7 @@
 
             // Symbol for Low Availability
             const lowSym = {
-                type: "picture-marker", // autocasts as new SimpleLineSymbol()
+                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
                 url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/8b2ed25bae6d4d61b86bc94128b1823d/data",
                 width: "32px",
                 height: "32px"
@@ -98,7 +100,7 @@
 
             // Symbol for Other
             const noSym = {
-                type: "picture-marker", // autocasts as new SimpleLineSymbol()
+                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
                 url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/6ecd168ed6794bac9a133eb27d4f7cd8/data",
                 width: "32px",
                 height: "32px"
@@ -118,6 +120,7 @@
 
             const pointRenderer = {
                 type: "unique-value",  //autocasts as new UniqueValueRenderer()
+                // We should be able to set up the radio buttons here to change the field being shown through a variable.
                 field: 'dairy',
                 defaultSymbol: otherSym,
 
@@ -140,7 +143,7 @@
                 ]
             };
 
-            //Trailheads feature layer(points)
+            //Grocery feature layer(points)
             var featureLayer = new FeatureLayer({
                 url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
                 renderer: pointRenderer,
@@ -149,10 +152,6 @@
                     title: "{StoreName}",
                     content: [
                         {
-                            // You can also set a descriptive text element. This element
-                            // uses an attribute from the featurelayer which displays a
-                            // sentence giving the total amount of trees value within a
-                            // specified census block. Text elements can only be set within the content.
                             type: "text", // TextContentElement
                             text:
                                 "This store is located at {Address} and is open {StoreHours}.  Please call ahead to verify availabiltiy - {PhoneNumber}."
@@ -196,6 +195,8 @@
             });
             map.add(featureLayer);
 
+            // Set up the queries for the Filter dropdown
+
             var sqlExpressions = ["dairy = 'high'", "dairy = 'low'", "dairy = 'no'", "meat", "water", "paper", "cleaning"];
 
             var selectFilter = document.createElement("select");
@@ -209,6 +210,7 @@
                 selectFilter.appendChild(option);
             });
 
+            // Add the Filter widget to the top right corner of the view
             view.ui.add(selectFilter, "top-left");
 
             function setFeatureLayerViewFilter(expression) {
@@ -224,11 +226,12 @@
                 setFeatureLayerViewFilter(event.target.value);
             });
 
+            // Set up the Directions widget
             var directionsWidget = new Directions({
                 view: view,
                 // Point the URL to a valid route service that uses an
                 // ArcGIS Online hosted service proxy instead of the default service
-                // I've set this up using my developers.arcgis.com account with a proxy that limits to 10 routes a minute.
+                // Bryan set this up using his developers.arcgis.com account with a proxy that limits to 10 routes a minute.
                 routeServiceUrl:
                     "https://utility.arcgis.com/usrsvcs/appservices/VX4GBDaBBt9P70gs/rest/services/World/Route/NAServer/Route_World"
             });
