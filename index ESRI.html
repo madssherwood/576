@@ -1,0 +1,245 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript GEOG 576 Final App</title>
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 1;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        #headerDiv {
+            padding: 0;
+            margin: 0;
+            height: 5%;
+            width: 100%;
+        }
+    </style>
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/widgets/Locate",
+        ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate) {
+
+            var map = new Map({
+                basemap: "streets-navigation-vector",
+
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-89.418782, 43.062652],
+                zoom: 11
+            });
+
+            var locateBtn = new Locate({
+                view: view
+            });
+
+            // Add the locate widget to the top left corner of the view
+            view.ui.add(locateBtn, {
+                position: "top-left"
+            });
+
+
+            var renderer = {
+                type: "simple",  // autocasts as new SimpleRenderer()
+                symbol: {
+                    type: "simple-marker",  // autocasts as new SimpleFillSymbol()
+                    color: [255, 128, 0, 0.5],
+                    outline: {  // autocasts as new SimpleLineSymbol()
+                        width: 1,
+                        color: "black"
+                    }
+                }
+            };
+
+            // Symbol for High Availability
+            const highSym = {
+                type: "simple-marker", // autocasts as new SimpleLineSymbol()
+                color: "#30ffea",
+                outline: {  // autocasts as new SimpleLineSymbol()
+                    width: 1,
+                    color: "black"
+                }
+            };
+
+            // Symbol for Low Availability
+            const lowSym = {
+                type: "simple-marker", // autocasts as new SimpleLineSymbol()
+                color: "#ff6207",
+                outline: {  // autocasts as new SimpleLineSymbol()
+                    width: 1,
+                    color: "black"
+                }
+            };
+
+            // Symbol for No Availability
+            const noSym = {
+                type: "simple-marker", // autocasts as new SimpleLineSymbol()
+                color: "#ef37ac",
+                outline: {  // autocasts as new SimpleLineSymbol()
+                    width: 1,
+                    color: "black"
+                }
+            };
+
+            // Symbol for Other
+            const otherSym = {
+                type: "simple-marker", // autocasts as new SimpleLineSymbol()
+                color: "#000000",
+                outline: {  // autocasts as new SimpleLineSymbol()
+                    width: 1,
+                    color: "black"
+                }
+            };
+
+            const pointRenderer = {
+                type: "unique-value",  //autocasts as new UniqueValueRenderer()
+                field: 'dairy',
+                defaultSymbol: otherSym,
+
+                uniqueValueInfos: [
+                    {
+                        value: "high",
+                        symbol: highSym,
+                        label: "High Availability"
+                    },
+                    {
+                        value: "low",
+                        symbol: lowSym,
+                        label: "Low Availability"
+                    },
+                    {
+                        value: "no",
+                        symbol: noSym,
+                        label: "No Availability"
+                    }
+                ]
+            };
+
+            //Trailheads feature layer(points)
+            var featureLayer = new FeatureLayer({
+                url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
+                renderer: pointRenderer,
+                outFields: ["*"],  //Return all fields so it can be queried client side
+                popupTemplate: {
+                    title: "{StoreName}",
+                    content: [
+                        {
+                            type: "fields",
+                            fieldInfos: [
+                                {
+                                    fieldName: "dairy",
+                                    label: "Dairy - "
+                                },
+                                {
+                                    fieldName: "meat",
+                                    label: "Meat - ",
+                                },
+                                {
+                                    fieldName: "water",
+                                    label: "Water - ",
+                                },
+                                {
+                                    fieldName: "cleaning",
+                                    label: "Cleaning - ",
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
+            map.add(featureLayer);
+
+            var sqlExpressions = ["dairy = 'high'", "dairy = 'low'", "dairy = 'no'", "meat", "water", "paper", "cleaning"];
+
+            var selectFilter = document.createElement("select");
+            selectFilter.setAttribute("class", "esri-widget esri-select");
+            selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+
+            sqlExpressions.forEach(function (sql) {
+                var option = document.createElement("option");
+                option.value = sql;
+                option.innerHTML = sql;
+                selectFilter.appendChild(option);
+            });
+
+            view.ui.add(selectFilter, "top-left");
+
+            function setFeatureLayerViewFilter(expression) {
+                view.whenLayerView(featureLayer).then(function (featureLayerView) {
+                    featureLayerView.filter = {
+                        where: expression
+                    };
+                });
+            }
+
+            selectFilter.addEventListener('change', function (event) {
+                // setFeatureLayerFilter(event.target.value);
+                setFeatureLayerViewFilter(event.target.value);
+            });
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="headerDiv">
+            <!-- <div id="result">
+                <label for="item">Choose an item to view availabilty:
+
+                    <label>Choose an ice cream flavor:
+                        <select class="ice-cream" name="ice-cream">
+                            <option value="">Select One …</option>
+                            <option value="chocolate">Chocolate</option>
+                            <option value="sardine">Sardine</option>
+                            <option value="vanilla">Vanilla</option>
+                        </select>
+                    </label>
+
+                    <div class="result"></div> -->
+
+            <!-- <select class="item" name="item">
+                        <option value="dairy">Select One ...</option>
+                        <option value="dairy">Dairy Products</option>
+                        <option value="breads">Breads & Grains</option>
+                        <option value="produce">Fresh Produce</option>
+                        <option value="meat">Meat & Seafood</option>
+                        <option value="water">Bottled Water</option>
+                        <option value="paper">Paper Products</option>
+                        <option value="cleaning">Cleaning Products</option>
+                    </select> -->
+            </label>
+        </div>
+    </div>
+    <div id="viewDiv"></div>
+    </div>
+</body>
+
+</html>
