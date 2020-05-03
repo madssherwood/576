@@ -3,10 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>ArcGIS API for JavaScript GEOG 576 Final App</title>
+    <title>Dane County Grocery Stores Final App</title>
     <style>
         html,
         body,
+        #nav {
+            color: aliceblue;
+        }
+
         #viewDiv {
             padding: 1;
             margin: 0;
@@ -41,14 +45,18 @@
             "esri/layers/FeatureLayer",
             "esri/symbols/SimpleMarkerSymbol",
             "esri/widgets/Locate",
-            "esri/widgets/Directions"
-        ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate, Directions) {
+            "esri/widgets/Directions",
+            "esri/layers/TileLayer",
+            "esri/widgets/LayerList",
+            "esri/widgets/Home",
+            "esri/widgets/Editor"
+        ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate, Directions, TileLayer, LayerList, Home, Editor) {
 
             // Set up map for div
             var map = new Map({
                 basemap: "streets-navigation-vector",
-
             });
+
 
             var view = new MapView({
                 container: "viewDiv",
@@ -56,17 +64,21 @@
                 center: [-89.418782, 43.062652],
                 zoom: 11
             });
-
             // Set up the locate widget and call to view
             var locateBtn = new Locate({
                 view: view
             });
-
             // Add the locate widget to the top left corner of the view
             view.ui.add(locateBtn, {
                 position: "top-left"
             });
 
+            var homeWidget = new Home({
+                view: view
+            });
+
+            // adds the home widget to the top left corner of the MapView
+            view.ui.add(homeWidget, "top-left");
             // Believe this could be commented out and the map will still work
             var renderer = {
                 type: "simple",  // autocasts as new SimpleRenderer()
@@ -79,7 +91,6 @@
                     }
                 }
             };
-
             // Symbol for High Availability
             const highSym = {
                 type: "picture-marker", // autocasts as new PictureMarkerSymbol()
@@ -87,8 +98,6 @@
                 width: "32px",
                 height: "32px"
             };
-
-
             // Symbol for Low Availability
             const lowSym = {
                 type: "picture-marker", // autocasts as new PictureMarkerSymbol()
@@ -96,17 +105,13 @@
                 width: "32px",
                 height: "32px"
             };
-
-
-            // Symbol for Other
+            // Symbol for No Availability
             const noSym = {
                 type: "picture-marker", // autocasts as new PictureMarkerSymbol()
                 url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/6ecd168ed6794bac9a133eb27d4f7cd8/data",
                 width: "32px",
                 height: "32px"
             };
-
-
             // Symbol for Other
             const otherSym = {
                 type: "simple-marker", // autocasts as new SimpleLineSymbol()
@@ -118,10 +123,10 @@
             };
 
 
-            const pointRenderer = {
+            var dairyPointRenderer = {
                 type: "unique-value",  //autocasts as new UniqueValueRenderer()
                 // We should be able to set up the radio buttons here to change the field being shown through a variable.
-                field: 'dairy',
+                field: "dairy",
                 defaultSymbol: otherSym,
 
                 uniqueValueInfos: [
@@ -143,10 +148,13 @@
                 ]
             };
 
-            //Grocery feature layer(points)
-            var featureLayer = new FeatureLayer({
+            //Dairy layer(points)
+            var transportationLayer = new FeatureLayer({
                 url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
-                renderer: pointRenderer,
+                mode: FeatureLayer.MODE_ONDEMAND,
+                visible: true,
+                id: "dairy",
+                renderer: dairyPointRenderer,
                 outFields: ["*"],  //Return all fields so it can be queried client side
                 popupTemplate: {
                     title: "{StoreName}",
@@ -193,42 +201,25 @@
                     ]
                 }
             });
-            map.add(featureLayer);
+            map.add(transportationLayer);
 
-            // Set up the queries for the Filter dropdown
 
-            var sqlExpressions = ["dairy = 'high'", "dairy = 'low'", "dairy = 'no'", "meat", "water", "paper", "cleaning"];
 
-            var selectFilter = document.createElement("select");
-            selectFilter.setAttribute("class", "esri-widget esri-select");
-            selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
 
-            sqlExpressions.forEach(function (sql) {
-                var option = document.createElement("option");
-                option.value = sql;
-                option.innerHTML = sql;
-                selectFilter.appendChild(option);
+            var layerList = new LayerList({
+                view: view,
+                container: "query"
             });
+            // Adds widget below other elements in the top left corner of the view
+            //view.ui.add(layerList, {
+            //  position: "top-right"
+            //});
 
-            // Add the Filter widget to the top right corner of the view
-            view.ui.add(selectFilter, "top-left");
-
-            function setFeatureLayerViewFilter(expression) {
-                view.whenLayerView(featureLayer).then(function (featureLayerView) {
-                    featureLayerView.filter = {
-                        where: expression
-                    };
-                });
-            }
-
-            selectFilter.addEventListener('change', function (event) {
-                // setFeatureLayerFilter(event.target.value);
-                setFeatureLayerViewFilter(event.target.value);
-            });
 
             // Set up the Directions widget
             var directionsWidget = new Directions({
                 view: view,
+                container: "query",
                 // Point the URL to a valid route service that uses an
                 // ArcGIS Online hosted service proxy instead of the default service
                 // Bryan set this up using his developers.arcgis.com account with a proxy that limits to 10 routes a minute.
@@ -236,24 +227,85 @@
                     "https://utility.arcgis.com/usrsvcs/appservices/VX4GBDaBBt9P70gs/rest/services/World/Route/NAServer/Route_World"
             });
 
-            // Add the Directions widget to the top right corner of the view
-            view.ui.add(directionsWidget, {
-                position: "bottom-right"
+            let editor = new Editor({
+                view: view,
+                container: "create"
             });
 
         });
-
     </script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-    <div id="container">
-        <div id="headerDiv">
 
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a>
+        <!---is this title okay??--->
+    </nav>
+
+    <div class="container-fluid">
+
+        <div class="col-md-3">
+            <div class="tab-content">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#query" data-toggle="tab">Search</a></li>
+                    <li><a href="#create" data-toggle="tab">Report</a></li>
+                </ul>
+
+                <div class="tab-pane active" id="query">
+                </div>
+                <div class="tab-pane" id="create">
+                </div>
+            </div>
         </div>
+        <div class="col-md-9"></div>
+
+
+        <div id="viewDiv" class="col-md-9" class="mh-90"></div>
     </div>
-    <div id="viewDiv"></div>
-    </div>
+
+
+
+
+    <!-- <ul class="nav nav-pills" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="search" data-toggle="tab" href="#search" role="tab"
+                            aria-controls="search" aria-selected="true">Search</a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="report" data-toggle="tab" href="#report" role="tab"
+                            aria-controls="search" aria-selected="true">Report</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel-body">
+                <div class="tab-content" class="col-md-3" id="myTabContent">
+                    <div class="col-md-3" class="tab-pane fade show active" id="panel" role="tabpanel"
+                        aria-labelledby="search-tab">
+                    </div>
+                    <div class="col-md-3" class="tab-pane fade" id="report" role="tabpanel"
+                        aria-labelledby="search-tab">
+                    </div>
+                </div>
+                    <div id="viewDiv" class="col-md-9" class="panel-body" class="mh-90">
+                </div>
+            </div>
+        </div> -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
