@@ -7,21 +7,10 @@
     <style>
         html,
         body,
-        #nav {
-            color: aliceblue;
-        }
-
         #viewDiv {
-            padding: 1;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-        }
-
-        #headerDiv {
             padding: 0;
             margin: 0;
-            height: 5%;
+            height: 96%;
             width: 100%;
         }
     </style>
@@ -252,10 +241,13 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">
+            <h1><b>COVID-19 Grocery Store Stock in Dane County</b></h1>
+        </a>
+        <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <span class="navbar-brand mb-0 h1">COVID-19 Grocery Store Stock in Dane County</span>-->
 
-    <nav class="navbar navbar-fixed-top">
-        <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a>
-        <!---is this title okay??--->
     </nav>
 
     <div class="container-fluid">
@@ -263,8 +255,12 @@
         <div class="col-md-3">
             <div class="tab-content">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#query" data-toggle="tab">Search</a></li>
-                    <li><a href="#create" data-toggle="tab">Report</a></li>
+                    <li class="active"><a href="#query" data-toggle="tab">
+                            <h3>Search</h3>
+                        </a></li>
+                    <li><a href="#create" data-toggle="tab">
+                            <h3>Report</h3>
+                        </a></li>
                 </ul>
 
                 <div class="tab-pane active" id="query">
