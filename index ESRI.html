@@ -49,8 +49,9 @@
             "esri/layers/TileLayer",
             "esri/widgets/LayerList",
             "esri/widgets/Home",
-            "esri/widgets/Editor"
-        ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate, Directions, TileLayer, LayerList, Home, Editor) {
+            "esri/widgets/Editor",
+            "esri/widgets/Legend"
+        ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate, Directions, TileLayer, LayerList, Home, Editor, Legend) {
 
             // Set up map for div
             var map = new Map({
@@ -232,6 +233,17 @@
                 container: "create"
             });
 
+            var legend = new Legend({
+                view: view,
+                layerInfos: [{
+                    layer: transportationLayer,
+                    type: "card",
+                    title: "Product Availability"
+                }]
+            });
+
+            view.ui.add(legend, "bottom-right");
+
         });
     </script>
 
@@ -241,7 +253,7 @@
 
 <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-fixed-top">
         <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a>
         <!---is this title okay??--->
     </nav>
@@ -266,36 +278,6 @@
 
         <div id="viewDiv" class="col-md-9" class="mh-90"></div>
     </div>
-
-
-
-
-    <!-- <ul class="nav nav-pills" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="search" data-toggle="tab" href="#search" role="tab"
-                            aria-controls="search" aria-selected="true">Search</a>
-
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="report" data-toggle="tab" href="#report" role="tab"
-                            aria-controls="search" aria-selected="true">Report</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="panel-body">
-                <div class="tab-content" class="col-md-3" id="myTabContent">
-                    <div class="col-md-3" class="tab-pane fade show active" id="panel" role="tabpanel"
-                        aria-labelledby="search-tab">
-                    </div>
-                    <div class="col-md-3" class="tab-pane fade" id="report" role="tabpanel"
-                        aria-labelledby="search-tab">
-                    </div>
-                </div>
-                    <div id="viewDiv" class="col-md-9" class="panel-body" class="mh-90">
-                </div>
-            </div>
-        </div> -->
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
