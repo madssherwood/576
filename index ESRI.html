@@ -163,7 +163,7 @@
                                     label: "Dairy "
                                 },
                                 {
-                                    fieldName: "bread",
+                                    fieldName: "breads",
                                     label: "Bread & Grains ",
                                 },
                                 {
@@ -219,7 +219,8 @@
 
             let editor = new Editor({
                 view: view,
-                container: "create"
+                container: "create",
+                allowedWorkflows: ["update"]
             });
 
             var legend = new Legend({
