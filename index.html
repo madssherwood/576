@@ -1,218 +1,440 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
-		<title>Dane County Grocery Stores</title> <!---is this title okay?--->
+<html>
 
-        <link rel="stylesheet" href="css/style.css"/>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Dane County Grocery Stores Final App</title>
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 96%;
+            width: 100%;
+        }
+    </style>
 
-        <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
-        <script src="https://js.arcgis.com/4.15/"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
 
-        <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
-        <script src="https://js.arcgis.com/4.15/"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
 
-        <!-- Google Map js libraries-->
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk2dIewJcYtxvNDLVk1Jmj1kgb5zgleRI&libraries=places,visualization"></script>
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/widgets/Locate",
+            "esri/widgets/Directions",
+            "esri/layers/TileLayer",
+            "esri/widgets/LayerList",
+            "esri/widgets/Home",
+            "esri/widgets/Editor",
+            "esri/widgets/Legend"
+        ], function (Map, MapView, FeatureLayer, SimpleMarkerSymbol, Locate, Directions, TileLayer, LayerList, Home, Editor, Legend) {
 
-    </head>
+            // Set up map for div
+            var map = new Map({
+                basemap: "streets-navigation-vector",
+            });
 
-    <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <a class="navbar-brand">COVID-19 Grocery Store Stock in Dane County</a> <!---is this title okay??--->
-        </nav>
 
-        <div class="container-fluid">
-        <div class="row">
-        <div class="sidebar col-xs-3">
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-89.418782, 43.062652],
+                zoom: 11
+            });
+            // Set up the locate widget and call to view
+            var locateBtn = new Locate({
+                view: view
+            });
+            // Add the locate widget to the top left corner of the view
+            view.ui.add(locateBtn, {
+                position: "top-left"
+            });
 
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="#query" data-toggle="tab">Search</a></li>
-          <li><a href="#create" data-toggle="tab">Report</a></li>
-        </ul>
+            var homeWidget = new Home({
+                view: view
+            });
 
-        <div class="tab-content ">
-
-        <div class="tab-pane active" id="query">
-              <form id = "query_form">
-                <div><label>Store Name:</label>
-                    <select onchange="onSelectStore(this)" name="store_label">
-                        <option value="">All</option>
-                        <option value="ALDI">ALDI</option>
-                        <option value="Brennan's Market">Brennan's Market</option>
-                        <option value="Costco">Costco</option>
-                        <option value="Festival Foods">Festival Foods</option>
-                        <option value="Hy-Vee">Hy-Vee</option>
-                        <option value="Metro Market">Metro Market</option>
-                        <option value="Pick 'n Save">Pick 'n Save</option>
-                        <option value="Piggly Wiggly Midwest">Piggly Wiggly Midwest</option>
-                        <option value="Target">Target</option>
-                        <option value="Trader Joe's">Trader Joe's</option>
-                        <option value="Walmart">Walmart</option>
-                        <option value="Whole Foods Market">Whole Foods Market</option>
-                        <option value="Willy Street Co-op">Willy Street Co-op</option>
-                        <option value="Woodman's Market">Woodman's Market</option>
-                    </select>
-                  </div>
-                <br>
-                <div><label>Store Type:</label>
-                    <select onchange="onSelectReportType(this)" name="store_type"> <!---change this! add field in data--->
-                        <option value="">All</option>
-                        <option value="grocery">Grocery Only</option>
-                        <option value="bigbox">Big Box</option>
-                    </select>
-                  </div>
-                <br>
-
-                <script language="JavaScript">
-                    function toggle(source) {
-                        var checkboxes = document.getElementsByName('check');
-                        checkboxes.forEach((item) => {
-                            if (item !== source) item.checked = false
-                        })
+            // adds the home widget to the top left corner of the MapView
+            view.ui.add(homeWidget, "top-left");
+            // Believe this could be commented out and the map will still work
+            var renderer = {
+                type: "simple",  // autocasts as new SimpleRenderer()
+                symbol: {
+                    type: "simple-marker",  // autocasts as new SimpleFillSymbol()
+                    color: [255, 128, 0, 0.5],
+                    outline: {  // autocasts as new SimpleLineSymbol()
+                        width: 1,
+                        color: "black"
                     }
-                  </script>                
-                    
-                <div>
-                  <label>What are you shopping for?</label>
-                    <br>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="dairy_products"> Dairy Products<br/>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="bread_grain"> Breads & Grains<br/>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="produce"> Fresh Produce<br/>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="meat_seafood"> Meat & Seafood<br/>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="water"> Bottled Water<br/>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="paper_products"> Paper Products<br/>
-                    <input type="checkbox" name="check" onClick="toggle(this)" value="cleaning_products"> Cleaning Products<br/>
-                  </div>
-                <br>
+                }
+            };
+            // Symbol for High Availability
+            const highSym = {
+                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+                url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/3c106fa7b91645c683d8e85d8dd97ba6/data",
+                width: "32px",
+                height: "32px"
+            };
+            // Symbol for Low Availability
+            const lowSym = {
+                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+                url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/8b2ed25bae6d4d61b86bc94128b1823d/data",
+                width: "32px",
+                height: "32px"
+            };
+            // Symbol for No Availability
+            const noSym = {
+                type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+                url: "https://tscggis.maps.arcgis.com/sharing/rest/content/items/6ecd168ed6794bac9a133eb27d4f7cd8/data",
+                width: "32px",
+                height: "32px"
+            };
+            // Symbol for Other
+            const otherSym = {
+                type: "simple-marker", // autocasts as new SimpleLineSymbol()
+                color: "#000000",
+                outline: {  // autocasts as new SimpleLineSymbol()
+                    width: 1,
+                    color: "black"
+                }
+            };
 
-                <button type="submit" class="btn btn-default">
-                  Submit
-                </button>
-                <br>
-                <br>
-								<div id="legend"><h3>Status</h3>
-									<div>
-											<img src=img/none.png>
-	                    <label>No Supply</label>
-	                </div>
-									<div>
-											<img src=img/low.png>
-											<label>Low Supply</label>
-									</div>
-									<div>
-											<img src=img/high.png>
-											<label>High Supply</label>
-									</div>
-								</div>
 
-              </form>
+            var dairyPointRenderer = {
+                type: "unique-value",  //autocasts as new UniqueValueRenderer()
+                // We should be able to set up the radio buttons here to change the field being shown through a variable.
+                field: "dairy",
+                defaultSymbol: otherSym,
+
+                uniqueValueInfos: [
+                    {
+                        value: "high",
+                        symbol: highSym,
+                        label: "High Availability"
+                    },
+                    {
+                        value: "low",
+                        symbol: lowSym,
+                        label: "Low Availability"
+                    },
+                    {
+                        value: "no",
+                        symbol: noSym,
+                        label: "No Availability"
+                    }
+                ]
+            };
+
+
+
+            //Dairy layer(points)
+            var transportationLayer = new FeatureLayer({
+                url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
+                mode: FeatureLayer.MODE_ONDEMAND,
+                visible: true,
+                id: "dairy",
+                renderer: dairyPointRenderer,
+                outFields: ["*"],  //Return all fields so it can be queried client side
+                popupTemplate: {
+                    title: "{StoreName}",
+                    content: [
+                        {
+                            type: "text", // TextContentElement
+                            text:
+                                "This store is located at {Address} and is open {StoreHours}.  Please call ahead to verify availabiltiy - {PhoneNumber}."
+                        },
+                        {
+                            type: "fields",
+                            fieldInfos: [
+
+                                {
+                                    fieldName: "dairy",
+                                    label: "Dairy "
+                                },
+                                {
+                                    fieldName: "breads",
+                                    label: "Bread & Grains ",
+                                },
+                                {
+                                    fieldName: "produce",
+                                    label: "Fresh Produce ",
+                                },
+                                {
+                                    fieldName: "meat",
+                                    label: "Meat & Seafood ",
+                                },
+                                {
+                                    fieldName: "water",
+                                    label: "Bottled Water ",
+                                },
+                                {
+                                    fieldName: "paper",
+                                    label: "Paper Products ",
+                                },
+                                {
+                                    fieldName: "cleaning",
+                                    label: "Cleaning Products ",
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
+            map.add(transportationLayer);
+
+            var legend = new Legend({
+                view: view,
+                layerInfos: [{
+                    layer: transportationLayer,
+                    type: "card",
+                    title: "Product Availability"
+                }]
+            });
+
+            view.ui.add(legend, "bottom-right");
+
+            //variables to be used in select filter
+            var sqlExpressions = ["dairy", "meat", "water", "paper", "cleaning","breads","produce"];
+
+            //Creation of HTML element for selection dropdown & title
+            var selectDiv = document.createElement("selectDiv")
+            var selectTitle = document.createElement("selectTitle")
+            var titleText = document.createTextNode("Please select which product you are shopping for")
+            var selectFilter = document.createElement("select");
+
+
+
+
+
+            selectFilter.setAttribute("class", "esri-widget esri-select");
+            selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+
+            selectTitle.appendChild(titleText);
+            selectDiv.appendChild(selectTitle);
+            selectDiv.appendChild(selectFilter);
+
+
+
+
+
+
+            query.appendChild(selectDiv);
+
+
+
+            sqlExpressions.forEach(function (sql) {
+                var option = document.createElement("option");
+                option.value = sql;
+                option.innerHTML = sql;
+                selectFilter.appendChild(option);
+            });
+
+
+            //function to update the map when a user selects which type of product they are looking for in the selectFilter
+            function updateLayer(expression,layer,legend){
+              map.remove(layer);
+
+              var dairyPointRenderer = {
+                  type: "unique-value",  //autocasts as new UniqueValueRenderer()
+                  field: expression,
+                  defaultSymbol: otherSym,
+
+                  uniqueValueInfos: [
+                      {
+                          value: "high",
+                          symbol: highSym,
+                          label: "High Availability"
+                      },
+                      {
+                          value: "low",
+                          symbol: lowSym,
+                          label: "Low Availability"
+                      },
+                      {
+                          value: "no",
+                          symbol: noSym,
+                          label: "No Availability"
+                      }
+                  ]
+              };
+
+
+              //Dairy layer(points)
+              var transportationLayer = new FeatureLayer({
+                  url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
+                  mode: FeatureLayer.MODE_ONDEMAND,
+                  visible: true,
+                  id: "dairy",
+                  renderer: dairyPointRenderer,
+                  outFields: ["*"],  //Return all fields so it can be queried client side
+                  popupTemplate: {
+                      title: "{StoreName}",
+                      content: [
+                          {
+                              type: "text", // TextContentElement
+                              text:
+                                  "This store is located at {Address} and is open {StoreHours}.  Please call ahead to verify availabiltiy - {PhoneNumber}."
+                          },
+                          {
+                              type: "fields",
+                              fieldInfos: [
+
+                                  {
+                                      fieldName: "dairy",
+                                      label: "Dairy "
+                                  },
+                                  {
+                                      fieldName: "breads",
+                                      label: "Bread & Grains ",
+                                  },
+                                  {
+                                      fieldName: "produce",
+                                      label: "Fresh Produce ",
+                                  },
+                                  {
+                                      fieldName: "meat",
+                                      label: "Meat & Seafood ",
+                                  },
+                                  {
+                                      fieldName: "water",
+                                      label: "Bottled Water ",
+                                  },
+                                  {
+                                      fieldName: "paper",
+                                      label: "Paper Products ",
+                                  },
+                                  {
+                                      fieldName: "cleaning",
+                                      label: "Cleaning Products ",
+                                  }
+                              ]
+                          }
+                      ]
+                  }
+              });
+
+              map.add(transportationLayer);
+              view.ui.remove(legend);
+
+              var legend = new Legend({
+                  view: view,
+                  layerInfos: [{
+                      layer: transportationLayer,
+                      type: "card",
+                      title: "Product Availability"
+                  }]
+              });
+
+              view.ui.add(legend, "bottom-right");
+
+              return [transportationLayer,legend]
+            };
+
+
+
+            //Filter for selecting product type
+            selectFilter.addEventListener('change', function (event) {
+                returnValues = updateLayer(event.target.value,transportationLayer,legend);
+                transportationLayer = returnValues[0];
+                legend = returnValues[1];
+            });
+
+
+
+//I removed Layer list for now, but this can be added back in if we choose
+            // var layerList = new LayerList({
+            //     view: view,
+            //     container: "query"
+            // });
+          //  Adds widget below other elements in the top left corner of the view
+            // view.ui.add(layerList, {
+            //  position: "top-right"
+            // });
+
+
+            // Set up the Directions widget
+            var directionsWidget = new Directions({
+                view: view,
+                container: "query",
+                // Point the URL to a valid route service that uses an
+                // ArcGIS Online hosted service proxy instead of the default service
+                // Bryan set this up using his developers.arcgis.com account with a proxy that limits to 10 routes a minute.
+                routeServiceUrl:
+                    "https://utility.arcgis.com/usrsvcs/appservices/VX4GBDaBBt9P70gs/rest/services/World/Route/NAServer/Route_World"
+            });
+
+            var editor = new Editor({
+                view: view,
+                container: "create",
+                allowedWorkflows: ["update"]
+            });
+
+
+
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">
+            <h1><b>COVID-19 Grocery Store Stock in Dane County</b></h1>
+        </a>
+        <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <span class="navbar-brand mb-0 h1">COVID-19 Grocery Store Stock in Dane County</span>-->
+
+    </nav>
+
+    <div class="container-fluid">
+
+        <div class="col-md-3">
+            <div class="tab-content">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#query" data-toggle="tab">
+                            <h3>Search</h3>
+                        </a></li>
+                    <li><a href="#create" data-toggle="tab">
+                            <h3>Report</h3>
+                        </a></li>
+                </ul>
+
+                <div class="tab-pane active" id="query">
+                </div>
+                <div class="tab-pane" id="create">
+                </div>
             </div>
-
-        <div class="tab-pane" id="create">
-            <form id = "create_form">
-                <div><label>Store Name:</label>
-                    <select onchange="onSelectStore(this)" name="store_label">
-                        <option value="">Choose Store Name</option>
-                        <option value="ALDI">ALDI</option>
-                        <option value="Brennan's Market">Brennan's Market</option>
-                        <option value="Costco">Costco</option>
-                        <option value="Festival Foods">Festival Foods</option>
-                        <option value="Hy-Vee">Hy-Vee</option>
-                        <option value="Metro Market">Metro Market</option>
-                        <option value="Pick 'n Save">Pick 'n Save</option>
-                        <option value="Piggly Wiggly Midwest">Piggly Wiggly Midwest</option>
-                        <option value="Target">Target</option>
-                        <option value="Trader Joe's">Trader Joe's</option>
-                        <option value="Walmart">Walmart</option>
-                        <option value="Whole Foods Market">Whole Foods Market</option>
-                        <option value="Willy Street Co-op">Willy Street Co-op</option>
-                        <option value="Woodman's Market">Woodman's Market</option>
-                    </select>
-                </div>
-                <div class="store_info_div" style="visibility: hidden"><label class="store_info"></label>
-                    <select class="store_info_select" name="store_info"></select>
-                </div>
-                <div>
-                    <label>Dairy Product Availability</label>
-                    <br>
-                    <label><input type="radio" name="dairy_products" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="dairy_products" value="low">&nbspLow</label>
-                    <label><input type="radio" name="dairy_products" value="none">&nbspNone</label>
-                  </div>
-                <br>
-                <div>
-                    <label>Bread & Grain Availability</label>
-                    <br>
-                    <label><input type="radio" name="bread_grain" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="bread_grain" value="low">&nbspLow</label>
-                    <label><input type="radio" name="bread_grain" value="none">&nbspNone</label>
-                  </div>
-                <br>
-                <div>
-                    <label>Fresh Produce Availability</label>
-                    <br>
-                    <label><input type="radio" name="produce" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="produce" value="low">&nbspLow</label>
-                    <label><input type="radio" name="produce" value="none">&nbspNone</label>
-                  </div>
-                <br>
-                <div>
-                    <label>Meat & Seafood Availability</label>
-                    <br>
-                    <label><input type="radio" name="meat_seafood" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="meat_seafood" value="low">&nbspLow</label>
-                    <label><input type="radio" name="meat_seafood" value="none">&nbspNone</label>
-                  </div>
-                <br>
-                <div>
-                    <label>Bottled Water Availability</label>
-                    <br>
-                    <label><input type="radio" name="water" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="water" value="low">&nbspLow</label>
-                    <label><input type="radio" name="water" value="none">&nbspNone</label>
-                  </div>
-                <br>
-                <div>
-                    <label>Paper Product Availability</label>
-                    <br>
-                    <label><input type="radio" name="paper_products" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="paper_products" value="low">&nbspLow</label>
-                    <label><input type="radio" name="paper_products" value="none">&nbspNone</label>
-                  </div>
-                <br>
-                <div>
-                    <label>Cleaning Product Availability</label>
-                    <br>
-                    <label><input type="radio" name="cleaning_products" value="high">&nbspHigh</label>
-                    <label><input type="radio" name="cleaning_products" value="low">&nbspLow</label>
-                    <label><input type="radio" name="cleaning_products" value="none">&nbspNone</label>
-                  </div>
-                <br>
-
-                <button type="submit" class="btn btn-default">
-                  Submit
-                </button>
-            </form>
         </div>
-        </div>
-        </div>
+        <div class="col-md-9"></div>
 
-        <div id="map-canvas" class="col-xs-9"></div>
 
-        </div>
-        </div>
+        <div id="viewDiv" class="col-md-9" class="mh-90"></div>
+    </div>
 
-        <script src="js/loadform.js"></script>
-        <!--<script src="js/loadmap.js"></script>-->
-        <script src="js/esrimap.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
 
-	</body>
 </html>
