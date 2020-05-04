@@ -117,7 +117,7 @@
                 type: "unique-value",  //autocasts as new UniqueValueRenderer()
                 // We should be able to set up the radio buttons here to change the field being shown through a variable.
                 field: "dairy",
-                defaultSymbol: otherSym,
+                //defaultSymbol: otherSym,
 
                 uniqueValueInfos: [
                     {
@@ -207,7 +207,7 @@
             view.ui.add(legend, "bottom-right");
 
             //variables to be used in select filter
-            var sqlExpressions = ["dairy", "meat", "water", "paper", "cleaning","breads","produce"];
+            var sqlExpressions = ["dairy", "meat", "water", "paper", "cleaning", "breads", "produce"];
 
             //Creation of HTML element for selection dropdown & title
             var selectDiv = document.createElement("selectDiv")
@@ -244,122 +244,122 @@
 
 
             //function to update the map when a user selects which type of product they are looking for in the selectFilter
-            function updateLayer(expression,layer,legend){
-              map.remove(layer);
+            function updateLayer(expression, layer, legend) {
+                map.remove(layer);
 
-              var dairyPointRenderer = {
-                  type: "unique-value",  //autocasts as new UniqueValueRenderer()
-                  field: expression,
-                  defaultSymbol: otherSym,
+                var dairyPointRenderer = {
+                    type: "unique-value",  //autocasts as new UniqueValueRenderer()
+                    field: expression,
+                    //defaultSymbol: otherSym,
 
-                  uniqueValueInfos: [
-                      {
-                          value: "high",
-                          symbol: highSym,
-                          label: "High Availability"
-                      },
-                      {
-                          value: "low",
-                          symbol: lowSym,
-                          label: "Low Availability"
-                      },
-                      {
-                          value: "no",
-                          symbol: noSym,
-                          label: "No Availability"
-                      }
-                  ]
-              };
+                    uniqueValueInfos: [
+                        {
+                            value: "high",
+                            symbol: highSym,
+                            label: "High Availability"
+                        },
+                        {
+                            value: "low",
+                            symbol: lowSym,
+                            label: "Low Availability"
+                        },
+                        {
+                            value: "no",
+                            symbol: noSym,
+                            label: "No Availability"
+                        }
+                    ]
+                };
 
 
-              //Dairy layer(points)
-              var transportationLayer = new FeatureLayer({
-                  url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
-                  mode: FeatureLayer.MODE_ONDEMAND,
-                  visible: true,
-                  id: "dairy",
-                  renderer: dairyPointRenderer,
-                  outFields: ["*"],  //Return all fields so it can be queried client side
-                  popupTemplate: {
-                      title: "{StoreName}",
-                      content: [
-                          {
-                              type: "text", // TextContentElement
-                              text:
-                                  "This store is located at {Address} and is open {StoreHours}.  Please call ahead to verify availabiltiy - {PhoneNumber}."
-                          },
-                          {
-                              type: "fields",
-                              fieldInfos: [
+                //Dairy layer(points)
+                var transportationLayer = new FeatureLayer({
+                    url: "https://services1.arcgis.com/JPUKRee8mEBfJ0K4/arcgis/rest/services/SafeGraph_POI_Data/FeatureServer",
+                    mode: FeatureLayer.MODE_ONDEMAND,
+                    visible: true,
+                    id: "dairy",
+                    renderer: dairyPointRenderer,
+                    outFields: ["*"],  //Return all fields so it can be queried client side
+                    popupTemplate: {
+                        title: "{StoreName}",
+                        content: [
+                            {
+                                type: "text", // TextContentElement
+                                text:
+                                    "This store is located at {Address} and is open {StoreHours}.  Please call ahead to verify availabiltiy - {PhoneNumber}."
+                            },
+                            {
+                                type: "fields",
+                                fieldInfos: [
 
-                                  {
-                                      fieldName: "dairy",
-                                      label: "Dairy "
-                                  },
-                                  {
-                                      fieldName: "breads",
-                                      label: "Bread & Grains ",
-                                  },
-                                  {
-                                      fieldName: "produce",
-                                      label: "Fresh Produce ",
-                                  },
-                                  {
-                                      fieldName: "meat",
-                                      label: "Meat & Seafood ",
-                                  },
-                                  {
-                                      fieldName: "water",
-                                      label: "Bottled Water ",
-                                  },
-                                  {
-                                      fieldName: "paper",
-                                      label: "Paper Products ",
-                                  },
-                                  {
-                                      fieldName: "cleaning",
-                                      label: "Cleaning Products ",
-                                  }
-                              ]
-                          }
-                      ]
-                  }
-              });
+                                    {
+                                        fieldName: "dairy",
+                                        label: "Dairy "
+                                    },
+                                    {
+                                        fieldName: "breads",
+                                        label: "Bread & Grains ",
+                                    },
+                                    {
+                                        fieldName: "produce",
+                                        label: "Fresh Produce ",
+                                    },
+                                    {
+                                        fieldName: "meat",
+                                        label: "Meat & Seafood ",
+                                    },
+                                    {
+                                        fieldName: "water",
+                                        label: "Bottled Water ",
+                                    },
+                                    {
+                                        fieldName: "paper",
+                                        label: "Paper Products ",
+                                    },
+                                    {
+                                        fieldName: "cleaning",
+                                        label: "Cleaning Products ",
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                });
 
-              map.add(transportationLayer);
-              view.ui.remove(legend);
+                map.add(transportationLayer);
+                view.ui.remove(legend);
 
-              var legend = new Legend({
-                  view: view,
-                  layerInfos: [{
-                      layer: transportationLayer,
-                      type: "card",
-                      title: "Product Availability"
-                  }]
-              });
+                var legend = new Legend({
+                    view: view,
+                    layerInfos: [{
+                        layer: transportationLayer,
+                        type: "card",
+                        title: "Product Availability"
+                    }]
+                });
 
-              view.ui.add(legend, "bottom-right");
+                view.ui.add(legend, "bottom-right");
 
-              return [transportationLayer,legend]
+                return [transportationLayer, legend]
             };
 
 
 
             //Filter for selecting product type
             selectFilter.addEventListener('change', function (event) {
-                returnValues = updateLayer(event.target.value,transportationLayer,legend);
+                returnValues = updateLayer(event.target.value, transportationLayer, legend);
                 transportationLayer = returnValues[0];
                 legend = returnValues[1];
             });
 
 
 
-//I removed Layer list for now, but this can be added back in if we choose
+            //I removed Layer list for now, but this can be added back in if we choose
             // var layerList = new LayerList({
             //     view: view,
             //     container: "query"
             // });
-          //  Adds widget below other elements in the top left corner of the view
+            //  Adds widget below other elements in the top left corner of the view
             // view.ui.add(layerList, {
             //  position: "top-right"
             // });
